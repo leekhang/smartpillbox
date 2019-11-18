@@ -1,0 +1,201 @@
+/* Reseting browser default properties */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary, time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+  font-size: 100%;
+	vertical-align: baseline;
+}
+
+canvas {
+  display: none;
+}
+
+body {
+  padding: 10% 10%;
+  background-color: #F6F6F6;
+}
+
+h1, h2, h3, h4, h5, p, ol, li, button, input {
+  font-family: 'DM Sans', sans-serif;
+}
+
+h1 {
+  font-size: 2rem;
+  color: #242424;
+  margin-bottom: 16px;
+}
+
+p {
+  font-size: 1.125rem;
+  color: #363636;
+  /* margin-bottom: 0.75rem; */
+}
+
+.divlist {
+  display: flex;
+  flex-direction: row;
+}
+
+div.listitem {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+div.name_element, div.time_element {
+  height: 36px;
+  padding: 5px 8px; 
+  border-radius: 5px;
+  margin-right: 14px;
+  display: flex;
+  align-items: center;
+}
+
+div.del_element {
+  display: flex;
+  align-items: center;
+}
+
+div.name_element {
+  height: 40px;
+  width: 242px;
+  background-color: #0085FF;
+}
+
+div.time_element {
+  width: 130px;
+  border: 2px solid #0085FF;
+  margin-right: 18px;
+}
+
+.p_name, .p_time {
+  display: inline-block;
+  margin-left: 0.325rem;
+  font-size: 1.25rem;
+}
+
+.p_name {
+  color: #FFF;
+}
+
+.p_time {
+  color: #007FF3;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.center-align {
+  align-items: center;
+  justify-content: center;
+  padding: 0 auto;
+}
+
+#form {
+  width: 100%;
+  margin-bottom: 0.5rem;
+  transition: all .275s cubic-bezier(.23,1,.32,1);
+}
+
+#addbutton {
+  color: #363636;
+  font-weight: 600;
+  word-spacing: 0.1px;
+  background-color: #FFFFFF;
+  border: 2px solid #E6E6E6; 
+  transition: all .275s cubic-bezier(.23,1,.32,1);
+}
+
+#addbutton:hover {
+  background-color: #0085FF;
+  border: 2px solid #0085FF; 
+  color: #fff;
+  transition: all .2s cubic-bezier(.23,1,.32,1);
+}
+
+input {
+  height: 36px;
+  padding: 5px 8px; 
+  border: 2px solid #E6E6E6; 
+  border-radius: 5px;
+  font-size: 1.25rem;
+  margin-right: 12px;
+}
+
+input[type=text] {
+  font-weight: 100;
+  width: 240px;
+}
+
+input[type=text]::placeholder {
+  color: #AAA;
+}
+
+input[type=time] {
+  width: 130px;
+}
+
+input[type=time]::-webkit-inner-spin-button {  
+  width: 14px;
+  height: 30px;
+}
+
+input:focus {
+  /* outline: solid 5px rgba(188, 255, 239, 0.75); */
+  outline: none;
+  border: 2px solid #0085FF;
+  transition: all .275s cubic-bezier(.23,1,.32,1);
+}
+
+button {
+  width: 50px;
+  height: 50px;
+  padding: 5px 15px;
+  background:#ccc; 
+  border: none;
+  cursor: pointer;
+  -webkit-border-radius: 5px;
+  border-radius: 5px; 
+  font-size: 1.75rem;
+  line-height: 1rem;
+  font-weight: 100;
+  position: absolute;
+}
+
+button:focus {
+  outline: none;
+}
+
+button.del_button {
+  height: 40px;
+  width: 40px;
+  border-radius: 20px;
+  background-color: #000;
+  opacity: 0.2;
+  padding: 0px;
+  /* position: absolute; */
+}
+
+button.del_button:hover {
+  opacity: 0.5;
+}
+
+span.del_content {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 100;
+  position: absolute;
+  top: 11px;
+  left: 12px;
+}
+
+#char-count {
+  color: #555;
+  padding-left: 2px;
+}
