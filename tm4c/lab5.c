@@ -1,6 +1,7 @@
+#include <stdint.h>
 #include "mcheader.h"
 #include "main.h"
-#include <stdint.h>
+#include "timers.h"
 
 void UART_Init();
 

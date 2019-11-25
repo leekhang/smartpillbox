@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #ifndef __MCHEADER_H__
 #define __MCHEADER_H__
 
@@ -91,6 +93,16 @@
 // bit 1: controls whether ADC module 1 is enabled (1) or disabled.
 
 #define RCGCADC ( *((volatile uint32_t *) 0x400FE638) )
+
+
+/* Register 73: 32/64-Bit Wide General-Purpose Timer RCGC (offset: 0x65C) */
+
+#define RCGCWTIMER       ( *((volatile uint32_t *)0x400FE065U) )
+#define RCGCWTIMER_T4    0x10
+#define RCGCWTIMER_T3    0x08
+#define RCGCWTIMER_T2    0x04
+#define RCGCWTIMER_T1    0x02
+#define RCGCWTIMER_T0    0x01
 
 
 // GENERAL PURPOSE INPUT/OUTPUT ------------------------------------------------
