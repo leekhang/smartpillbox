@@ -1,51 +1,51 @@
 #include "mcheader.h"
-#include "taskheader.h"
+#include "main.h"
 #include <stdint.h>
 
 void UART_Init();
 
 void lab5() {
-  PLL_Init();
-  PortF_Init(); // initiate port F for LEDs & switches
+  // PLL_Init();
+  // PortF_Init(); // initiate port F for LEDs & switches
 
   UART_Init();
 
-  ADC_Init(); // initiate the ADC
-  Timer0_Init(16000000); // initiate timer
+  // ADC_Init(); // initiate the ADC
+  // Timer0_Init(16000000); // initiate timer
 
   while (1) {
-    if (cur_state == SLOW) { // cur_state == 80MHz
-      if (!SW0() && SW1() && (next_state != FAST)) {
-        next_state = FAST;
-        Timer0_Init(80000000);
-      } else if (!SW0() && !SW1() && (next_state != MED)) {
-        next_state = MED;
-        Timer0_Init(16000000);
-      }
-      RCC2 &= ~0x1FC00000; // clear SYSDIV2
-      RCC2 |= 0x18C00000; // set SYSDIV2 to 99
-    } else if (cur_state == FAST) {
-      if (SW0() && !SW1() && (next_state != SLOW)) {
-        next_state = SLOW;
-        Timer0_Init(4000000);
-      } else if (!SW0() && !SW1() && (next_state != MED)) {
-        next_state = MED;
-        Timer0_Init(16000000);
-      }
-      RCC2 &= ~0x1FC00000; // clear SYSDIV2
-      RCC2 |= 0x1000000; // set SYSDIV2 to 4
-    } else { // cur_state == 16MHz
-      if (SW0() && !SW1() && (next_state != SLOW)) {
-        next_state = SLOW;
-        Timer0_Init(4000000);
-      } else if (!SW0() && SW1() && (next_state != FAST)) {
-        next_state = FAST;
-        Timer0_Init(80000000);
-      }
-      RCC2 &= ~0x1FC00000; // clear SYSDIV2
-      RCC2 |= 0x6000000; /// set SYSDIV2 to 24
-    }
-    cur_state = next_state;
+    // if (cur_state == SLOW) { // cur_state == 80MHz
+    //   if (!SW0() && SW1() && (next_state != FAST)) {
+    //     next_state = FAST;
+    //     Timer0_Init(80000000);
+    //   } else if (!SW0() && !SW1() && (next_state != MED)) {
+    //     next_state = MED;
+    //     Timer0_Init(16000000);
+    //   }
+    //   RCC2 &= ~0x1FC00000; // clear SYSDIV2
+    //   RCC2 |= 0x18C00000; // set SYSDIV2 to 99
+    // } else if (cur_state == FAST) {
+    //   if (SW0() && !SW1() && (next_state != SLOW)) {
+    //     next_state = SLOW;
+    //     Timer0_Init(4000000);
+    //   } else if (!SW0() && !SW1() && (next_state != MED)) {
+    //     next_state = MED;
+    //     Timer0_Init(16000000);
+    //   }
+    //   RCC2 &= ~0x1FC00000; // clear SYSDIV2
+    //   RCC2 |= 0x1000000; // set SYSDIV2 to 4
+    // } else { // cur_state == 16MHz
+    //   if (SW0() && !SW1() && (next_state != SLOW)) {
+    //     next_state = SLOW;
+    //     Timer0_Init(4000000);
+    //   } else if (!SW0() && SW1() && (next_state != FAST)) {
+    //     next_state = FAST;
+    //     Timer0_Init(80000000);
+    //   }
+    //   RCC2 &= ~0x1FC00000; // clear SYSDIV2
+    //   RCC2 |= 0x6000000; /// set SYSDIV2 to 24
+    // }
+    // cur_state = next_state;
   }
 }
 
