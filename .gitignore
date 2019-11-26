@@ -1,23 +1,167 @@
-#Mac
+
+# Created by https://www.gitignore.io/api/c,iar,macos,windows,visualstudiocode
+# Edit at https://www.gitignore.io/?templates=c,iar,macos,windows,visualstudiocode
+
+### C ###
+# Prerequisites
+*.d
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Linker output
+*.ilk
+*.map
+*.exp
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Kernel Module Compile Results
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+
+### IAR ###
+# Compiled binaries
+*.bin
+
+# Trash
+*.bak
+thumbs.db
+*.~*
+
+# IAR Settings
+**/settings/*.crun
+**/settings/*.dbgdt
+**/settings/*.cspy
+**/settings/*.cspy.*
+**/settings/*.xcl
+**/settings/*.dni
+**/settings/*.wsdt
+**/settings/*.wspos
+
+# IAR Debug Exe
+**/Exe/*.sim
+
+# IAR Debug Obj
+**/Obj/*.pbd
+**/Obj/*.pbd.*
+**/Obj/*.pbi
+**/Obj/*.pbi.*
+
+# IAR project "Debug" directory
+**/Debug/
+
+# IAR project "Release" directory
+**/Release/
+
+# IAR project settings directory
+**/settings/
+
+# IAR backup files
+Backup*
+
+# IAR .dep files
+*.dep
+
+### macOS ###
+# General
 .DS_Store
-.fseventsd
-.Spotlight-V100
-.Trashes
-.TemporaryItems
+.AppleDouble
+.LSOverride
 
-#VSCode
-.vscode/*
+# Icon must end with two \r
+Icon
 
-#TM4C
-tm4c/Debug/*
-tm4c/settings/*
-
-#Thumbnails
+# Thumbnails
 ._*
 
-#Windows
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+
+### Windows ###
+# Windows thumbnail cache files
 Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Dump file
+*.stackdump
+
+# Folder config file
 [Dd]esktop.ini
+
+# Recycle Bin used on file shares
 $RECYCLE.BIN/
-.cab
-.msi
+
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# End of https://www.gitignore.io/api/c,iar,macos,windows,visualstudiocode
