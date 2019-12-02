@@ -95,6 +95,13 @@
 #define RCGCADC ( *((volatile uint32_t *) 0x400FE638) )
 
 
+/* Register 70: Pulse Width Modulation (PWM) RCGC (offset: 0x640) */
+// bit 0: controls whether PWM Module 0 is enabled (1) or disabled
+// bit 1: controls whether PWM Module 1 is enabled (1) or disabled
+
+#define RCGCPWM ( *((volatile uint32_t *) 0x400FE640) )
+
+
 /* Register 73: 32/64-Bit Wide General-Purpose Timer RCGC (offset: 0x65C) */
 
 #define RCGCWTIMER       ( *((volatile uint32_t *)0x400FE065U) )
@@ -603,5 +610,224 @@
 #define UARTCC_5        ( *((volatile uint32_t *) 0x40011FC8) )
 #define UARTCC_6        ( *((volatile uint32_t *) 0x40012FC8) )
 #define UARTCC_7        ( *((volatile uint32_t *) 0x40013FC8) )
+
+
+// PULSE WIDTH MODULATOR (PWM) -----------------------------------------------
+
+/* Reg 1: PWM Master Control (offset: 0x000) */
+
+#define PWMCTL_0        ( *((volatile uint32_t *) 0x40028000) )
+#define PWMCTL_1        ( *((volatile uint32_t *) 0x40029000) )
+
+
+/* Reg 2: PWM Time Base Sync (offset: 0x004) */
+
+#define PWMSYNC_0       ( *((volatile uint32_t *) 0x40028004) )
+#define PWMSYNC_1       ( *((volatile uint32_t *) 0x40029004) )
+
+
+/* Reg 3: PWM Output Enable (offset: 0x008) */
+
+#define PWMENABLE_0     ( *((volatile uint32_t *) 0x40028008) )
+#define PWMENABLE_1     ( *((volatile uint32_t *) 0x40029008) )
+
+
+/* Reg 4: PWM Output Inversion (offset: 0x00C) */
+
+#define PWMINVERT_0     ( *((volatile uint32_t *) 0x4002800C) )
+#define PWMINVERT_1     ( *((volatile uint32_t *) 0x4002900C) )
+
+
+/* Reg 5: PWM Output Fault (offset: 0x010) */
+
+#define PWMFAULT_0      ( *((volatile uint32_t *) 0x40028010) )
+#define PWMFAULT_1      ( *((volatile uint32_t *) 0x40029010) )
+
+
+/* Reg 6: PWM Interrupt Enable (offset: 0x014) */
+
+#define PWMINTEN_0      ( *((volatile uint32_t *) 0x40028014) )
+#define PWMINTEN_1      ( *((volatile uint32_t *) 0x40029014) )
+
+
+/* Reg 7: PWM Raw Interrupt Status (offset: 0x018) */
+
+#define PWMRIS_0        ( *((volatile uint32_t *) 0x40028018) )
+#define PWMRIS_1        ( *((volatile uint32_t *) 0x40029018) )
+
+
+/* Reg 8: PWM Interrupt Status and Clear (offset: 0x01C) */
+
+#define PWMISC_0        ( *((volatile uint32_t *) 0x4002801C) )
+#define PWMISC_1        ( *((volatile uint32_t *) 0x4002901C) )
+
+
+/* Reg 9: PWM Status (offset: 0x020) */
+
+#define PWMSTATUS_0     ( *((volatile uint32_t *) 0x40028020) )
+#define PWMSTATUS_1     ( *((volatile uint32_t *) 0x40029020) )
+
+
+/* Reg 10: PWM Fault Condition Value (offset: 0x024) */
+
+#define PWMFAULTVAL_0   ( *((volatile uint32_t *) 0x40028024) )
+#define PWMFAULTVAL_1   ( *((volatile uint32_t *) 0x40029024) )
+
+
+/* Reg 11: PWM Enable Update (offset: 0x028) */
+
+#define PWMENUPD_0      ( *((volatile uint32_t *) 0x40028028) )
+#define PWMENUPD_1      ( *((volatile uint32_t *) 0x40029028) )
+
+
+/* Reg 12: PWM0 Control (offset: 0x040) */
+/* Reg 13: PWM1 Control (offset: 0x080) */
+/* Reg 14: PWM2 Control (offset: 0x0C0) */
+/* Reg 15: PWM3 Control (offset: 0x100) */
+
+#define PWM0CTL_0       ( *((volatile uint32_t *) 0x40028040) )
+#define PWM0CTL_1       ( *((volatile uint32_t *) 0x40029040) )
+#define PWM1CTL_0       ( *((volatile uint32_t *) 0x40028080) )
+#define PWM1CTL_1       ( *((volatile uint32_t *) 0x40029080) )
+#define PWM2CTL_0       ( *((volatile uint32_t *) 0x400280C0) )
+#define PWM2CTL_1       ( *((volatile uint32_t *) 0x400290C0) )
+#define PWM3CTL_0       ( *((volatile uint32_t *) 0x40028100) )
+#define PWM3CTL_1       ( *((volatile uint32_t *) 0x40029100) )
+
+
+/* Reg 16: PWM0 Interrupt and Trigger Enable (offset: 0x044) */
+/* Reg 17: PWM1 Interrupt and Trigger Enable (offset: 0x084) */
+/* Reg 18: PWM2 Interrupt and Trigger Enable (offset: 0x0C4) */
+/* Reg 19: PWM3 Interrupt and Trigger Enable (offset: 0x104) */
+
+#define PWM0INTEN_0     ( *((volatile uint32_t *) 0x40028044) )
+#define PWM0INTEN_1     ( *((volatile uint32_t *) 0x40029044) )
+#define PWM1INTEN_0     ( *((volatile uint32_t *) 0x40028084) )
+#define PWM1INTEN_1     ( *((volatile uint32_t *) 0x40029084) )
+#define PWM2INTEN_0     ( *((volatile uint32_t *) 0x400280C4) )
+#define PWM2INTEN_1     ( *((volatile uint32_t *) 0x400290C4) )
+#define PWM3INTEN_0     ( *((volatile uint32_t *) 0x40028104) )
+#define PWM3INTEN_1     ( *((volatile uint32_t *) 0x40029104) )
+
+
+/* Reg 20: PWM0 Raw Interrupt Status (offset: 0x048) */
+/* Reg 21: PWM1 Raw Interrupt Status (offset: 0x088) */
+/* Reg 22: PWM2 Raw Interrupt Status (offset: 0x0C8) */
+/* Reg 23: PWM3 Raw Interrupt Status (offset: 0x108) */
+
+#define PWM0RIS_0       ( *((volatile uint32_t *) 0x40028048) )
+#define PWM0RIS_1       ( *((volatile uint32_t *) 0x40029048) )
+#define PWM1RIS_0       ( *((volatile uint32_t *) 0x40028088) )
+#define PWM1RIS_1       ( *((volatile uint32_t *) 0x40029088) )
+#define PWM2RIS_0       ( *((volatile uint32_t *) 0x400280C8) )
+#define PWM2RIS_1       ( *((volatile uint32_t *) 0x400290C8) )
+#define PWM3RIS_0       ( *((volatile uint32_t *) 0x40028108) )
+#define PWM3RIS_1       ( *((volatile uint32_t *) 0x40029108) )
+
+
+/* Reg 24: PWM0 Interrupt Status and Clear (offset: 0x04C) */
+/* Reg 25: PWM1 Interrupt Status and Clear (offset: 0x08C) */
+/* Reg 26: PWM2 Interrupt Status and Clear (offset: 0x0CC) */
+/* Reg 27: PWM3 Interrupt Status and Clear (offset: 0x10C) */
+
+#define PWM0ISC_0       ( *((volatile uint32_t *) 0x4002804C) )
+#define PWM0ISC_1       ( *((volatile uint32_t *) 0x4002904C) )
+#define PWM1ISC_0       ( *((volatile uint32_t *) 0x4002808C) )
+#define PWM1ISC_1       ( *((volatile uint32_t *) 0x4002908C) )
+#define PWM2ISC_0       ( *((volatile uint32_t *) 0x400280CC) )
+#define PWM2ISC_1       ( *((volatile uint32_t *) 0x400290CC) )
+#define PWM3ISC_0       ( *((volatile uint32_t *) 0x4002810C) )
+#define PWM3ISC_1       ( *((volatile uint32_t *) 0x4002910C) )
+
+
+/* Reg 28: PWM0 Load (offset: 0x050) */
+/* Reg 29: PWM1 Load (offset: 0x090) */
+/* Reg 30: PWM2 Load (offset: 0x0D0) */
+/* Reg 31: PWM3 Load (offset: 0x110) */
+
+#define PWM0LOAD_0      ( *((volatile uint32_t *) 0x40028050) )
+#define PWM0LOAD_1      ( *((volatile uint32_t *) 0x40029050) )
+#define PWM1LOAD_0      ( *((volatile uint32_t *) 0x40028090) )
+#define PWM1LOAD_1      ( *((volatile uint32_t *) 0x40029090) )
+#define PWM2LOAD_0      ( *((volatile uint32_t *) 0x400280D0) )
+#define PWM2LOAD_1      ( *((volatile uint32_t *) 0x400290D0) )
+#define PWM3LOAD_0      ( *((volatile uint32_t *) 0x40028110) )
+#define PWM3LOAD_1      ( *((volatile uint32_t *) 0x40029110) )
+
+
+/* Reg 32: PWM0 Counter (offset: 0x054) */
+/* Reg 33: PWM1 Counter (offset: 0x094) */
+/* Reg 34: PWM2 Counter (offset: 0x0D4) */
+/* Reg 35: PWM3 Counter (offset: 0x114) */
+
+#define PWM0COUNT_0     ( *((volatile uint32_t *) 0x40028054) )
+#define PWM0COUNT_1     ( *((volatile uint32_t *) 0x40029054) )
+#define PWM1COUNT_0     ( *((volatile uint32_t *) 0x40028094) )
+#define PWM1COUNT_1     ( *((volatile uint32_t *) 0x40029094) )
+#define PWM2COUNT_0     ( *((volatile uint32_t *) 0x400280D4) )
+#define PWM2COUNT_1     ( *((volatile uint32_t *) 0x400290D4) )
+#define PWM3COUNT_0     ( *((volatile uint32_t *) 0x40028114) )
+#define PWM3COUNT_1     ( *((volatile uint32_t *) 0x40029114) )
+
+
+/* Reg 36: PWM0 Compare A (offset: 0x058) */
+/* Reg 37: PWM1 Compare A (offset: 0x098) */
+/* Reg 38: PWM2 Compare A (offset: 0x0D8) */
+/* Reg 39: PWM3 Compare A (offset: 0x118) */
+
+#define PWM0CMPA_0      ( *((volatile uint32_t *) 0x40028058) )
+#define PWM0CMPA_1      ( *((volatile uint32_t *) 0x40029058) )
+#define PWM1CMPA_0      ( *((volatile uint32_t *) 0x40028098) )
+#define PWM1CMPA_1      ( *((volatile uint32_t *) 0x40029098) )
+#define PWM2CMPA_0      ( *((volatile uint32_t *) 0x400280D8) )
+#define PWM2CMPA_1      ( *((volatile uint32_t *) 0x400290D8) )
+#define PWM3CMPA_0      ( *((volatile uint32_t *) 0x40028118) )
+#define PWM3CMPA_1      ( *((volatile uint32_t *) 0x40029118) )
+
+
+/* Reg 40: PWM0 Compare B (offset: 0x05C) */
+/* Reg 41: PWM1 Compare B (offset: 0x09C) */
+/* Reg 42: PWM2 Compare B (offset: 0x0DC) */
+/* Reg 43: PWM3 Compare B (offset: 0x11C) */
+
+#define PWM0CMPB_0      ( *((volatile uint32_t *) 0x4002805C) )
+#define PWM0CMPB_1      ( *((volatile uint32_t *) 0x4002905C) )
+#define PWM1CMPB_0      ( *((volatile uint32_t *) 0x4002809C) )
+#define PWM1CMPB_1      ( *((volatile uint32_t *) 0x4002909C) )
+#define PWM2CMPB_0      ( *((volatile uint32_t *) 0x400280DC) )
+#define PWM2CMPB_1      ( *((volatile uint32_t *) 0x400290DC) )
+#define PWM3CMPB_0      ( *((volatile uint32_t *) 0x4002811C) )
+#define PWM3CMPB_1      ( *((volatile uint32_t *) 0x4002911C) )
+
+
+/* Reg 44: PWM0 Generator A Control (offset: 0x060) */
+/* Reg 45: PWM1 Generator A Control (offset: 0x0A0) */
+/* Reg 46: PWM2 Generator A Control (offset: 0x0E0) */
+/* Reg 47: PWM3 Generator A Control (offset: 0x120) */
+
+#define PWM0GENA_0      ( *((volatile uint32_t *) 0x40028060) )
+#define PWM0GENA_1      ( *((volatile uint32_t *) 0x40029060) )
+#define PWM1GENA_0      ( *((volatile uint32_t *) 0x400280A0) )
+#define PWM1GENA_1      ( *((volatile uint32_t *) 0x400290A0) )
+#define PWM2GENA_0      ( *((volatile uint32_t *) 0x400280E0) )
+#define PWM2GENA_1      ( *((volatile uint32_t *) 0x400290E0) )
+#define PWM3GENA_0      ( *((volatile uint32_t *) 0x40028120) )
+#define PWM3GENA_1      ( *((volatile uint32_t *) 0x40029120) )
+
+
+/* Reg 48: PWM0 Generator B Control (offset: 0x064) */
+/* Reg 49: PWM1 Generator B Control (offset: 0x0A4) */
+/* Reg 50: PWM2 Generator B Control (offset: 0x0E4) */
+/* Reg 51: PWM3 Generator B Control (offset: 0x124) */
+
+#define PWM0GENB_0      ( *((volatile uint32_t *) 0x40028064) )
+#define PWM0GENB_1      ( *((volatile uint32_t *) 0x40029064) )
+#define PWM1GENB_0      ( *((volatile uint32_t *) 0x400280A4) )
+#define PWM1GENB_1      ( *((volatile uint32_t *) 0x400290A4) )
+#define PWM2GENB_0      ( *((volatile uint32_t *) 0x400280E4) )
+#define PWM2GENB_1      ( *((volatile uint32_t *) 0x400290E4) )
+#define PWM3GENB_0      ( *((volatile uint32_t *) 0x40028124) )
+#define PWM3GENB_1      ( *((volatile uint32_t *) 0x40029124) )
+
 
 #endif
