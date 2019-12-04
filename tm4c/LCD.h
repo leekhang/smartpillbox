@@ -3,8 +3,8 @@
 #ifndef __LCD_H__
 #define __LCD_H__
 
-#include "main.h"
 #include "SSD2119.h"
+#include "main.h"
 
 int Med_Name_Length(int);
 void Screen_Print_Name(int);

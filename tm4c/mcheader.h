@@ -523,6 +523,18 @@
 #define UARTDR_6        ( *((volatile uint32_t *) 0x40012000) )
 #define UARTDR_7        ( *((volatile uint32_t *) 0x40013000) )
 
+/* Reg 2: UART Receive Status / Error Clear (offset: 0x004) */
+// [3] UART Overrun Error, [2] UART Break Error,
+// [1] UART Parity Error, [0] UART Framing Error
+
+#define UART_RSR_ECR_0        ( *((volatile uint32_t *) 0x4000C004) )
+#define UART_RSR_ECR_1        ( *((volatile uint32_t *) 0x4000D004) )
+#define UART_RSR_ECR_2        ( *((volatile uint32_t *) 0x4000E004) )
+#define UART_RSR_ECR_3        ( *((volatile uint32_t *) 0x4000F004) )
+#define UART_RSR_ECR_4        ( *((volatile uint32_t *) 0x40010004) )
+#define UART_RSR_ECR_5        ( *((volatile uint32_t *) 0x40011004) )
+#define UART_RSR_ECR_6        ( *((volatile uint32_t *) 0x40012004) )
+#define UART_RSR_ECR_7        ( *((volatile uint32_t *) 0x40013004) )
 
 /* Reg 3: UART Flag (offset: 0x018) */
 // 7: Tx FIFO Empty, 6: Rx FIFO full, 5: Tx FIFO full, 4: Rx FIFO empty
