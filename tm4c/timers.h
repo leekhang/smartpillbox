@@ -104,6 +104,7 @@ int Timer_IsDone(int timer)
     case 0: return Timer0_IsDone();
     case 1: return Timer1_IsDone();
     case 2: return Timer2_IsDone();
+  }
 }
 
 // This clears the timer complete indicator, which restarts the timer
