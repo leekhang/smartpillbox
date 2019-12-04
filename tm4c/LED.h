@@ -9,6 +9,7 @@ void PWM_Init();
 void LED0_On(); void LED0_Off(); void LED0_Set(int);
 void LED1_On(); void LED1_Off(); void LED1_Set(int);
 void LED2_On(); void LED2_Off(); void LED2_Set(int);
+void LED_On(int); void LED_Off(int); void LED_Set(int, int);
 void LED_AllOff();
 
 
@@ -53,9 +54,36 @@ void LED1_Off() { PWMENABLE_1 &= ~(1 << 6); }
 void LED2_On()  { PWMENABLE_1 |= (1 << 7); }
 void LED2_Off() { PWMENABLE_1 &= ~(1 << 7); }
 
+void LED_On(int i) {
+  switch (i)
+  {
+    case 0: LED0_On(); break;
+    case 1: LED1_On(); break;
+    case 2: LED2_On(); break;
+  }
+}
+
+void LED_Off(int i) {
+  switch (i)
+  {
+    case 0: LED0_Off(); break;
+    case 1: LED1_Off(); break;
+    case 2: LED2_Off(); break;
+  }
+}
+
 // set PWM level between 127 (on) and 0 (off)
 void LED0_Set(int level) { PWM2CMPA_1 = level; PWM3CMPA_1 = level; }
 void LED1_Set(int level) { PWM2CMPA_1 = level; PWM3CMPA_1 = level; }
 void LED2_Set(int level) { PWM2CMPA_1 = level; PWM3CMPA_1 = level; }
+
+void LED_Set(int i, int level) {
+  switch (i)
+  {
+    case 0: LED0_Set(level); break;
+    case 1: LED1_Set(level); break;
+    case 2: LED2_Set(level); break;
+  }
+}
 
 #endif
