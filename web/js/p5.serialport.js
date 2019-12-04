@@ -20,7 +20,7 @@
       (factory(p5));
     });
   else if (typeof exports === 'object')
-    factory(require('./p5'));
+    factory(require('../p5'));
   else
     factory(root['p5']);
 }(this, function(p5) {
@@ -120,11 +120,6 @@
           self.serialportList = messageObject.data;
           if (typeof self.listCallback !== "undefined") {
             self.listCallback(messageObject.data);
-          }
-        } else if (messageObject.method === 'registerClient') {
-          self.clientData = messageObject.data;
-          if (typeof self.registerCallback !== "undefined") {
-            self.registerCallback(messageObject.data);
           }
         } else if (messageObject.method === "close") {
           if (typeof self.closeCallback !== "undefined") {
@@ -697,16 +692,16 @@
  *   console.log("Serial port is open.")
  * }
  */
-  p5.SerialPort.prototype.registerClient = function(cb) {
-    if (typeof cb === 'function') {
-      this.registerCallback = cb;
-    }
-    this.emit({
-      method: 'registerClient',
-      data: {}
-    });
-    return this.clientData;
-  }; 
+  // p5.SerialPort.prototype.registerClient = function(cb) {
+  //   if (typeof cb === 'function') {
+  //     this.registerCallback = cb;
+  //   }
+  //   this.emit({
+  //     method: 'registerClient',
+  //     data: {}
+  //   });
+  //   return this.clientData;
+  // };
 
 /**
  * // Register callback methods from sketch
@@ -740,10 +735,6 @@
     this.on('rawdata',_callback);
   };
 
-  p5.SerialPort.prototype.onRegisterClient = function(_callback) {
-    this.on('registerClient', _callback);
-  };
-
   // Version 2
   p5.SerialPort.prototype.on = function(_event, _callback) {
     if (_event == 'open') {
@@ -760,8 +751,6 @@
       this.connectedCallback = _callback;
     } else if (_event == 'rawdata') {
       this.rawDataCallback = _callback;
-    } else if (_event == 'registerClient') {
-      this.registerCallback = _callback;
     }
   };
 }));
