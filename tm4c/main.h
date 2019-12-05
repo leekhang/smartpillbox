@@ -5,6 +5,7 @@
 
 void delay();
 void UART_Handler();
+unsigned long ascii_convert(char);
 
 // stores name (string), time (string), & time remaining (unsigned long timeRem)
 struct Med {
@@ -39,18 +40,20 @@ void UART_Init() {
   
   RCGCGPIO |= 0x1; // Enable clk to Port A
   GPIOAFSEL_A |= 0x3; // Set pins 0 & 1 for port A to be controlled by peripherals.
-  GPIOPCTL_A |= 0x3; // Select loc 0 on mux as peripheral src.
+  GPIOPCTL_A |= (1<<0) | (1<<4); // Select loc 0 on mux as peripheral src.
   GPIODEN_A |= 0x3; // set port A pins as digital
 
   UARTCTL_0 &= ~0x1; // disable UART module 0
   UARTIBRD_0 |= 104; // write integer BRD to UARTIBRD
   UARTFBRD_0 |= 11; // write frac BRD to UARTFBRD
-  UARTCTL_0 |= 0x300; // enable Tx and Rx
   UARTCC_0 |= 0x5; // set clock source to system clock
-  UARTLCRH_0 &= ~0x10; // disable FIFO
+  // UARTLCRH_0 &= ~0x10; // disable FIFO
   UARTLCRH_0 |= 0x60; // write serial param (word length to 8 bits)
-  UARTCTL_0 |= 0x1; // enable UART module 0
+  UARTCTL_0 |= (1<<0) | (1<<8) | (1<<9); // enable UART module 0 and Tx and Rx
 }
 
+unsigned long ascii_convert(char c) {
+  return (unsigned long) c - 48;
+}
 
 #endif
