@@ -21,15 +21,15 @@ void readTimeRem(char*);
 int main() {
 //  strcpy(medArray[0].name, "Ibuprofen");
 //  strcpy(medArray[0].time, "10:30 PM");
-//  medArray[0].timeRem = 0x000003FF;
+//  medArray[0].timeRem = 16000000 * 1;
 //  
 //  strcpy(medArray[1].name, "Diazepam");
 //  strcpy(medArray[1].time, "02:30 PM");
-//  medArray[1].timeRem = 0x000003FF;
+//  medArray[1].timeRem = 16000000 * 10;
 //  
 //  strcpy(medArray[2].name, "Tylenol");
 //  strcpy(medArray[2].time, "06:30 AM");
-//  medArray[2].timeRem = 0x000003FF;
+//  medArray[2].timeRem = 16000000 * 20;
   
   LCD_Init();
   LCD_SetCursor(0,0);
