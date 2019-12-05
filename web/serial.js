@@ -2,7 +2,8 @@
 
 let serial; // variable to hold an instance of the serialport library.
 let portName = '/dev/tty.usbmodem0E2163341'; // rename to the name of your port.
-let options = { baudrate: 9600 , parity: "N", stopbits: 1};
+let portName1 = '/dev/tty.usbmodem0E22C91C1'; // rename to the name of your port.
+let options = { baudRate: 9600 , parity: "N", stopbits: 1};
 let str = "";
 
 function serialInit() {
@@ -18,8 +19,7 @@ function serialInit() {
 	serial.on('close', portClose);      // callback for the port closing
 	
 	serial.list();                      // list the serial ports
-	serial.open(portName, options);              // open a serial port
-	// Serial(parent, portName, baudRate, parity, dataBits, stopBits)
+	serial.open(portName1);              // open a serial port
 }
 
 // Checks the serial for data from the TM4C.

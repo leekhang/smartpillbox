@@ -9,62 +9,111 @@
 #include "LCD.h"
 #include "lab5.c"
 
+#define DATA_LENGTH 36
+#define NAME_LENGTH 15
+#define TIME_LENGTH 9
+#define TIMEREM_LENGTH 14
+
 void printChar(char);
 void printString(char*);
 char readChar(void);
-// char* readString(void);
-void readName(char*);
-void readTime(char*);
-void readTimeRem(char*);
-
+void readData(char*);
+void readName(char*, char*);
+void readTime(char*, char*);
+void readTimeRem(char*, char*);
 
 int main() {
-//  strcpy(medArray[0].name, "Ibuprofen");
-//  strcpy(medArray[0].time, "10:30 PM");
-//  medArray[0].timeRem = 0x000003FF;
-//  
-//  strcpy(medArray[1].name, "Diazepam");
-//  strcpy(medArray[1].time, "02:30 PM");
-//  medArray[1].timeRem = 0x000003FF;
-//  
-//  strcpy(medArray[2].name, "Tylenol");
-//  strcpy(medArray[2].time, "06:30 AM");
-//  medArray[2].timeRem = 0x000003FF;
-  
   LCD_Init();
-  LCD_SetCursor(0,0);
-  LCD_SetTextColor(0xFF, 0xFF, 0xFF);
-  LCD_ColorFill(0);
   UART_Init();
   delay();
 
-  char name[15];
-  char time[9];
-  unsigned long timeRem = 0;
-
-  while(1) {
-    char signal = readChar();
-    if (signal == 37) {
-      readName(name);
-      LCD_PrintString(name); LCD_PrintString("\n\r");
-      
-      readTime(time);
-      LCD_PrintString(time); LCD_PrintString("\n\r");
-      
-      int num;
-      char timeRemChar[15];
-      readTimeRem(timeRemChar);
-      for (int i = ((int) pow(10,12)); i <= 0; i /= 10) {
-        num = (timeRemChar[i] != 48) ? i * ascii_convert(timeRemChar[i]) : 0;
-        timeRem += (unsigned long) num;
-      }
-      LCD_PrintInteger(timeRem);
-      LCD_PrintString("\n\r");
-    }
-    
+  for (int i = 0; i < 3; i++) {
+    strcpy(medArray[i].name, "");
+    strcpy(medArray[i].time, "--------");
+    medArray[i].index = -1;
   }
 
-  lab5();
+  int inputIndex, deleteIndex;
+  char name[15];
+  char time[9];
+  char timeRemChar[14];
+  char data[37];
+  
+  unsigned long long int timeRem, digit;
+  unsigned long long int mult = 1;
+  char signal;
+
+  Screen_Init();
+
+  while(1) {
+    signal = readChar();
+    if (signal == 37) {
+
+      readData(data);
+      inputIndex = ((int) data[0]) - 48;
+      medArray[inputIndex].index = inputIndex;
+
+      readName(name, data);
+      readTime(time, data);
+      readTimeRem(timeRemChar, data);
+      strcpy(medArray[inputIndex].name, name);
+      strcpy(medArray[inputIndex].time, time);
+
+      // LCD_PrintString("Index:"); LCD_PrintInteger(medArray[inputIndex].index); LCD_PrintString("\n\r");
+      // LCD_PrintString("Name:"); LCD_PrintString(medArray[inputIndex].name); LCD_PrintString("\n\r");
+      // LCD_PrintString("Time:"); LCD_PrintString(medArray[inputIndex].time); LCD_PrintString("\n\r");
+      // LCD_PrintString("TimeRemChar:"); LCD_PrintString(timeRemChar); LCD_PrintString("\n\r");
+      
+      timeRem = 0; mult = 1;
+      for (int i = 12; i >= 0; i--) {
+        digit = ((unsigned long long int) timeRemChar[i]) - 48;
+        if (digit && digit <= 9) {
+          digit *= mult;
+          mult *= 10;              
+        } else { 
+          digit = 0;
+        }
+        timeRem += digit;
+      }
+      medArray[inputIndex].timeRem = timeRem;
+      strcpy(name, "");
+      strcpy(data, "");
+      // unsigned long right = (unsigned long) timeRem;
+      // unsigned long left = (unsigned long) (timeRem >> 32);
+      // LCD_PrintString("T.Rem Val: "); LCD_PrintHex(left,0); LCD_PrintHex(right,0); LCD_PrintString("\n\r");
+      
+      Screen_Init();
+      delay();
+      
+    } else if (signal == 94) {
+      
+      deleteIndex = ((int) readChar()) - 48;
+      strcpy(medArray[deleteIndex].name, "");
+      strcpy(medArray[deleteIndex].time, "");
+      medArray[deleteIndex].index = -1;
+
+      Screen_Init();
+      delay();
+    }
+  }
+      // LCD_PrintString("Index:"); LCD_PrintInteger(index-48); LCD_PrintString("\n\r");
+      // LCD_PrintString("Name:"); LCD_PrintString(name); LCD_PrintString("\n\r");
+      // LCD_PrintString("Time:"); LCD_PrintString(time); LCD_PrintString("\n\r");
+      // LCD_PrintString("T.Rem:"); LCD_PrintString(timeRemChar); LCD_PrintString("\n\r");
+      
+      // unsigned long num;
+      // unsigned long mult = 1000000000000;
+      // timeRem = 0;
+      // for (int i = 0; i < 13; i++) {
+      //   mult /= i * 10;
+      //   num = (timeRemChar[i] != 48) ? mult * (timeRemChar[i]-48) : 0;        
+      //   timeRem += num;
+      //   LCD_PrintInteger(timeRem); LCD_PrintString(",  ");
+      // }
+      // LCD_PrintString("\n\r");
+      // LCD_PrintString("T.Rem Val: "); LCD_PrintInteger(timeRem); LCD_PrintString("\n\r");
+
+//  lab5();
 
   return 0;
 }
@@ -83,17 +132,31 @@ char readChar(void) {
   return c;
 }
 
-void readName(char* name) {
-  char c[15];
-  for (int i = 0; i < 15; i++) name[i] = readChar();
+void readData(char* data) {
+  for (int i = 0; i < DATA_LENGTH-1; i++) {
+    data[i] = readChar();
+    if (data[i] == 0) break;
+  }
+  data[DATA_LENGTH-1] = 0;
 }
 
-void readTime(char* time) {
-  for (int i = 0; i < 9; i++) time[i] = readChar();
+void readName(char* name, char* data) {
+  int i;
+  for (i = 0; i < NAME_LENGTH-1; i++) {
+    if (data[i+1] == 32) break;
+    name[i] = data[i+1];
+  }
+  name[i] = 0;
 }
 
-void readTimeRem(char* timeRemChar) {
-  for (int i = 0; i < 15; i++) timeRemChar[i] = readChar();
+void readTime(char* time, char*data) {
+  for (int i = 0; i < TIME_LENGTH-1; i++) time[i] = data[i+15];
+  time[TIME_LENGTH-1] = 0;
+}
+
+void readTimeRem(char* timeRemChar, char* data) {
+  for (int i = 0; i < TIMEREM_LENGTH-1; i++) timeRemChar[i] = data[i+23];
+  timeRemChar[TIMEREM_LENGTH-1] = 0;
 }
 
 void printChar(char c) {
@@ -106,40 +169,3 @@ void printString(char * str) {
     printChar(*(str++));
   }
 }
-
-void UART_Handler2() {
-   char name[14]; char time[8]; unsigned long timeRem = 0x0000;
-   for (int i = 0; i < 14; i++) {
-     while ((UARTFR_0 & 0x8) != 0x0); // wait till receiver is available.
-    //  while ((UARTFR_0 & 0x40) != 0x0); // wait till receiver is available.
-     name[i] = UARTDR_0;
-   }
-   for (int i = 0; i < 8; i++) {
-     while ((UARTFR_0 & 0x8) != 0x0); // wait till not busy.
-    //  while ((UARTFR_0 & 0x40) != 0x0); // wait till receiver is available.
-     time[i] = UARTDR_0;
-   }
-   for (int i = 0; i < 4; i++) {
-     while ((UARTFR_0 & 0x8) != 0x0); // wait till not busy.
-    //  while ((UARTFR_0 & 0x40) != 0x0); // wait till receiver is available.
-     timeRem += UARTDR_0 << i*8;
-   }
-   strcpy(medArray[0].name, name);
-   strcpy(medArray[0].time, time);
-//   strcpy(medArray[0].timeRem, timeRem);
-}
-
-// sprintf(output, "OVERRUN ERR: %02d\r\n", (UART_RSR_ECR_0 & 0x8));
-// LCD_PrintString(output);
-// delay();
-// sprintf(output, "BREAK ERR:   %02d\r\n", (UART_RSR_ECR_0 & 0x4));
-// LCD_PrintString(output);
-// delay();
-// sprintf(output, "PARITY ERR:  %02d\r\n", (UART_RSR_ECR_0 & 0x2));
-// LCD_PrintString(output);
-// delay();
-// sprintf(output, "FRAMING ERR: %02d\r\n", (UART_RSR_ECR_0 & 0x1));
-// LCD_PrintString(output);
-// delay();
-// delay();
-// delay();

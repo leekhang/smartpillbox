@@ -95,7 +95,7 @@ void LCD_PrintInteger(long n);
 // ************** LCD_PrintHex ****************************
 // - Prints a number in hexidecimal format
 // ********************************************************
-void LCD_PrintHex(unsigned long n);
+void LCD_PrintHex(unsigned long n, int flag);
 
 // ************** LCD_PrintBinary *************************
 // - Prints a number in binary format

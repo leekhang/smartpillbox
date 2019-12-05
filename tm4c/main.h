@@ -1,6 +1,7 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
+#include <stdint.h>
 #include "SSD2119.h"
 
 void delay();
@@ -9,9 +10,10 @@ unsigned long ascii_convert(char);
 
 // stores name (string), time (string), & time remaining (unsigned long timeRem)
 struct Med {
+    int index;
     char name[14];
     char time[8];
-    unsigned long timeRem;
+    unsigned long long int timeRem;
 };
 
 // array for storing medicine data
@@ -44,6 +46,10 @@ void UART_Init() {
   // UARTLCRH_0 &= ~0x10; // disable FIFO
   UARTLCRH_0 |= 0x60; // write serial param (word length to 8 bits)
   UARTCTL_0 |= (1<<0) | (1<<8) | (1<<9); // enable UART module 0 and Tx and Rx
+  
+  // NVIC_EN0_R =(1<<5);//INT EN
+  // UARTIM |=(1<<4);
+  // UARTICR|=(1<<4);//clear RX INT
 }
 
 unsigned long ascii_convert(char c) {

@@ -3,7 +3,7 @@
 const ABS_MAX = 3; // Maximum number of Meds that you can create.
 let button, nameInput, timeInput; // button and input are used as pointers to the text field and submit button 
 let upper; // upper keeps track of the number of todos in the array.
-let medArr = [], medDisp = []; // medArr stores the strings of todos, medDisp stores the html <li> objects created
+let avail = [], medArr = [], medDisp = []; // medArr stores the strings of todos, medDisp stores the html <li> objects created
 
 function setup() {
 	serialInit(); // Serial connection setup
@@ -19,7 +19,7 @@ function setup() {
 	// Create Button
 	button = createButton("+").id("addbutton").parent("form"); // create <button> HTML element
 	button.mousePressed(createNewItem); // set an event listener for the button
-	
+	avail.push(0, 1, 2);
 	upper = 0; // set the initial number of todos to 0.
 }
 
@@ -29,10 +29,12 @@ function createNewItem() {
 	let name = nameInput.value();
 	let time = timeInput.value();
   if ((name != "") && (name != " ") && (medArr.length <= ABS_MAX)) { 
-		medArr[upper] = {name, time}; // append new item into array
-		medArr.sort((a,b) => (a.time > b.time) ? 1 : -1);
-		let index = medArr.findIndex((obj) => obj.name == name);
-		// serial.write(stringifyMed(index)); // send the new array to TM4C
+		let index = avail[0];
+		avail.shift();
+		medArr[index] = {name, time}; // append new item into array
+		// medArr.sort((a,b) => (a.time > b.time) ? 1 : -1);
+		// let index = medArr.findIndex((obj) => obj.name == name);
+		serial.write(stringifyMed(index)); // send the new array to TM4C
 		upper++; // increment the number of items.
 		displayToDos(); // display the new array of items.
 	}
@@ -43,8 +45,12 @@ function createNewItem() {
 
 function deleteItem() {
 	let index = parseInt(event.path[1].id.charAt(10)); // figure out which button is pressed
-	medArr.splice(index, 1); // remove item from array.
+	console.log("deleting item at index: " + index);
+	medArr[index] = undefined;
+	avail.push(index); avail.sort();
 	(upper > 0) ? upper-- : upper = 0; // decrement upper.
+	serial.write("^" + index);
+	console.log(medArr);
 	displayToDos(); // display the new todos
 }
 
@@ -52,16 +58,18 @@ function deleteItem() {
 // recreates new <li> DOM elements based on updated array.
 function displayToDos() {
 	medDisp.forEach(obj => obj.remove()); // remove all <li> elements on display.
-	for (let i = 0; i < upper; i++) {
-		medDisp[i] = createDiv().addClass("listitem").id("item"+i).parent("divlist"); // create list item div
-		createDiv().addClass("name_element").id("name_element"+i).parent("item"+i); // create div box for name
-		createElement("p", " " + (i + 1) + ". " + medArr[i].name).addClass("p_name").parent("name_element"+i); // create p for name
-		createDiv().addClass("time_element").id("time_element"+i).parent("item"+i); // create div box for time
-		createElement("p", timeConvert(medArr[i].time)).addClass("p_time").parent("time_element"+i); // create p for time
-		createDiv().addClass("del_element").id("del_element"+i).parent("item"+i); // create div box for delete btn
-		let delButton = createButton("").addClass("del_button").id("del_button"+i).parent("del_element"+i); // create delete button
-		delButton.mousePressed(deleteItem); // set an event listener for delete btn
-		createElement("span", "×").addClass("del_content").parent("del_button"+i); // create span text for del btn
+	for (let i = 0; i < 3; i++) {
+		if (medArr[i] != undefined) {
+			medDisp[i] = createDiv().addClass("listitem").id("item"+i).parent("divlist"); // create list item div
+			createDiv().addClass("name_element").id("name_element"+i).parent("item"+i); // create div box for name
+			createElement("p", " " + (i + 1) + ". " + medArr[i].name).addClass("p_name").parent("name_element"+i); // create p for name
+			createDiv().addClass("time_element").id("time_element"+i).parent("item"+i); // create div box for time
+			createElement("p", timeConvert(medArr[i].time)).addClass("p_time").parent("time_element"+i); // create p for time
+			createDiv().addClass("del_element").id("del_element"+i).parent("item"+i); // create div box for delete btn
+			let delButton = createButton("").addClass("del_button").id("del_button"+i).parent("del_element"+i); // create delete button
+			delButton.mousePressed(deleteItem); // set an event listener for delete btn
+			createElement("span", "×").addClass("del_content").parent("del_button"+i); // create span text for del btn
+		}
 	}
 	console.log("mapped: " + medDisp);
 }
@@ -69,7 +77,6 @@ function displayToDos() {
 // Sets Enter key as an input method.
 function keyPressed() {
 	if (keyCode == 13) createNewItem(); // 13 is the Enter key.
-	if (keyCode == 32) serial.write("A"); // write something to tm4c
 }
 
 // Updates the char count above the text field and restrict the user from inputting more than 16 chars.
@@ -94,10 +101,12 @@ function stringifyArray() {
 
 // Creates a string of all of the medicine items from the array.
 function stringifyMed(index) {
-	output += "%" + index; // add start byte + index
+	let output = "%" + index; // add start byte + index
 	output += medArr[index].name.padEnd(14, " "); // append name of medicine (always 14 bytes)
 	output += timeConvert(medArr[index].time); // add time input for medicines (always 8 bytes)
-	output += timeRemaining(medArr[index].time).padStart(13, "0"); // add counter for TM4C (always 13 bytes)
+	let temp = timeRemaining(medArr[index].time).padStart(13, "0"); // add counter for TM4C (always 13 bytes)
+	output += temp;
+	console.log(output);
 	return output; // return the string
 }
 
@@ -113,7 +122,8 @@ function timeConvert(time) {
 		if (timeOut == 0) timeOut += 12;
 		timeOut += ":" + time[1];
 	}
-	timeOut += (pmFlag) ? " PM" : " AM"; 
+	timeOut += (pmFlag) ? " PM" : " AM";
+	// console.log("time: " + timeOut.length);
 	return timeOut;
 }
 
@@ -126,5 +136,7 @@ function timeRemaining(time) {
 	output = (60 - today.getSeconds()); // calculate no. of sec remaining.
 	output += 60 * (59 - parseInt(time[1])); // add no. of mins remaining (in sec).
 	output += hr * 60 * 60; // add the no. of hours remaining (in sec).
-	return output;
+	output += "";
+	console.log("T.Rem: " + output.length);
+	return output + "";
 }

@@ -502,7 +502,7 @@ void printf(char fmt[], ...) {
 				long* p = (long*) next_arg;
 				long x = *p;
 				next_arg = p + 1;
-				LCD_PrintHex(x);
+				LCD_PrintHex(x, 1);
 			} else if (fmt[k+1] == 'b') {       // Display binary
 				long* p = (long*) next_arg;
 				long x = *p;
@@ -563,12 +563,12 @@ void LCD_PrintInteger(long n){
 // ************** LCD_PrintHex ****************************
 // - Prints a number in hexidecimal format
 // ********************************************************
-void LCD_PrintHex(unsigned long n){
+void LCD_PrintHex(unsigned long n, int flag){
     unsigned char i = 0;
     unsigned char tempString[16];
 
     // Print hex prefix
-    LCD_PrintString("0x");
+    if (flag == 1) LCD_PrintString("0x");
 
     // If our number is 0, print 0
     if (n == 0) {

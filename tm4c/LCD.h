@@ -44,24 +44,35 @@ void LCD_DrawFilledRoundedRect(unsigned short x, unsigned short y, short w, shor
 
 void Screen_Print_Name(int i) {
   LCD_SetTextColor(0xFF, 0xFF, 0xFF); // white text
-  int count = 14 - Med_Name_Length(i);
-  LCD_SetCursor(22 + i*104 + 2*count, 100);
-  LCD_PrintString(medArray[i].name);
+  LCD_SetCursor(22 + i*104 + 10, 100);
+  if (medArray[i].index != -1) {
+    LCD_PrintString(medArray[i].name);
+  } else {
+    LCD_PrintString("Empty");
+  }
+  
 }
 
 void Screen_Print_Time(int i) {
   LCD_DrawFilledRect(10*(i+1) + 94*i + 18, 112, 60, 18, Color4[15]);
   LCD_SetTextColor(0x00, 0xD9, 0xEA); // dark text
   LCD_SetCursor(10*(i+1) + 94*i + 24, 100+18);
-  LCD_PrintString(medArray[i].time);
+  if (medArray[i].index != -1) {
+    LCD_PrintString(medArray[i].time);
+  } else {
+    LCD_PrintString("--------");
+  }
 }
 
-int Med_Name_Length(int i) {
-  char * name = medArray[i].name;
-  int len = 0;
-  while (name[len] != 0) len++;
-  return len;
-}
+// int Med_Name_Length(int i) {
+//   char * name = medArray[i].name;
+//   int len = 0;
+//   for (int j = 0; j < 15; j++) {
+//     if (name[i] >= 65 && name[i] <= 122) len++;
+//     else break;
+//   }
+//   return len;
+// }
 
 void Screen_Remind(int i) {
   LCD_ColorFill(Color4[15]); // white background
