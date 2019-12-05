@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <math.h>
 
 #include "mcheader.h"
 #include "main.h"
@@ -8,25 +9,59 @@
 #include "LCD.h"
 #include "lab5.c"
 
-int main() {
-  strcpy(medArray[0].name, "Ibuprofen");
-  strcpy(medArray[0].time, "10:30 PM");
-  medArray[0].timeRem = 0x000003FF;
-  
-  strcpy(medArray[1].name, "Diazepam");
-  strcpy(medArray[1].time, "02:30 PM");
-  medArray[1].timeRem = 0x000003FF;
-  
-  strcpy(medArray[2].name, "Tylenol");
-  strcpy(medArray[2].time, "06:30 AM");
-  medArray[2].timeRem = 0x000003FF;
+void printChar(char);
+void printString(char*);
+char readChar(void);
+// char* readString(void);
+void readName(char*);
+void readTime(char*);
+void readTimeRem(char*);
 
-  LCD_ColorFill(0);
-  delay();
+
+int main() {
+//  strcpy(medArray[0].name, "Ibuprofen");
+//  strcpy(medArray[0].time, "10:30 PM");
+//  medArray[0].timeRem = 0x000003FF;
+//  
+//  strcpy(medArray[1].name, "Diazepam");
+//  strcpy(medArray[1].time, "02:30 PM");
+//  medArray[1].timeRem = 0x000003FF;
+//  
+//  strcpy(medArray[2].name, "Tylenol");
+//  strcpy(medArray[2].time, "06:30 AM");
+//  medArray[2].timeRem = 0x000003FF;
+  
+  LCD_Init();
   LCD_SetCursor(0,0);
+  LCD_SetTextColor(0xFF, 0xFF, 0xFF);
+  LCD_ColorFill(0);
+  UART_Init();
+  delay();
+
+  char name[15];
+  char time[9];
+  unsigned long timeRem = 0;
 
   while(1) {
-    UART_Handler();
+    char signal = readChar();
+    if (signal == 37) {
+      readName(name);
+      LCD_PrintString(name); LCD_PrintString("\n\r");
+      
+      readTime(time);
+      LCD_PrintString(time); LCD_PrintString("\n\r");
+      
+      int num;
+      char timeRemChar[15];
+      readTimeRem(timeRemChar);
+      for (int i = ((int) pow(10,12)); i <= 0; i /= 10) {
+        num = (timeRemChar[i] != 48) ? i * ascii_convert(timeRemChar[i]) : 0;
+        timeRem += (unsigned long) num;
+      }
+      LCD_PrintInteger(timeRem);
+      LCD_PrintString("\n\r");
+    }
+    
   }
 
   lab5();
@@ -38,16 +73,38 @@ int main() {
 conversion value and calculate the temperature of the internal temperature sensor. Make
 sure to clear the ADC interrupt flag after each conversion. */
 void UART_Handler() {
-  char test[4];
-  char output[8];
-  for (int i = 0; i < 4; i++) {
-    while ((UARTFR_0 & 0x10) != 0x0); // wait till receiver is available.
-    test[i] = UARTDR_0;
+  
+}
+
+char readChar(void) {
+  char c;
+  while ((UARTFR_0 & (1<<4)) != 0);
+  c = UARTDR_0;
+  return c;
+}
+
+void readName(char* name) {
+  char c[15];
+  for (int i = 0; i < 15; i++) name[i] = readChar();
+}
+
+void readTime(char* time) {
+  for (int i = 0; i < 9; i++) time[i] = readChar();
+}
+
+void readTimeRem(char* timeRemChar) {
+  for (int i = 0; i < 15; i++) timeRemChar[i] = readChar();
+}
+
+void printChar(char c) {
+  while ((UARTFR_0 & (1<<5)) != 0);
+  UARTDR_0 = c;
+}
+
+void printString(char * str) {
+  while (*str) {
+    printChar(*(str++));
   }
-  LCD_PrintString("Output:");
-  LCD_PrintString(test);
-  sprintf(output, "%s \n\r", test); // format as char array
-  LCD_PrintString(output); // print string
 }
 
 void UART_Handler2() {
