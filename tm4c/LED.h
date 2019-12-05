@@ -33,7 +33,7 @@ void PWM_Init() {
   GPIOPCTL_F |= 0x5505; // configure PF0, PF2, PF3 for PWM
   // RCC &= ~0x00100000; // don't divide PWM (USEPWMDIV)
   RCC |= 0x00100000; // divide PWM (USEPWMDIV)
-  RCC &= ~(7 << 17); // clear RCC PWMDIV (divide by 2)
+  RCC &= ~(0x111 << 17); // clear RCC PWMDIV (divide by 2)
 
   // configure PWM generators for countdown mode with immediate updates to the parameters
   PWM2CTL_1 = 0x00000000;
@@ -47,6 +47,8 @@ void PWM_Init() {
   PWM3LOAD_1 = PERIOD - 1; // period of PWM clock / PERIOD
   PWM2CMPA_1 = PERIOD - 1; // full-width pulse
   PWM3CMPA_1 = PERIOD - 1; // full-width pulse
+  PWM2CMPB_1 = PERIOD - 1; // full-width pulse
+  PWM3CMPB_1 = PERIOD - 1; // full-width pulse
   PWM2CTL_1 |= 0x1; // start PWM timer
   PWM3CTL_1 |= 0x1; // start PWM timer
 }
@@ -77,6 +79,12 @@ void LED_Off(int i) {
   }
 }
 
+void LED_AllOff() {
+  for (int i = 0; i < 3; i++) {
+    LED_Off(i);
+  }
+}
+
 // set PWM level between 511 (on) and 0 (off)
 void LED0_Set(int duty) { LED_Set(0, duty); }
 void LED1_Set(int duty) { LED_Set(1, duty); }
@@ -88,6 +96,8 @@ void LED_Set(int i, int duty) {
   PWM3CTL_1 &= ~0x1; // stop PWM timer
   PWM2CMPA_1 = duty;
   PWM3CMPA_1 = duty;
+  PWM2CMPB_1 = duty;
+  PWM3CMPB_1 = duty;
   PWM2CTL_1 |= 0x1; // start PWM timer
   PWM3CTL_1 |= 0x1; // start PWM timer
 }

@@ -16,9 +16,9 @@ void PWM_Pulse();
 int SerialHasInput(void);
 
 // program current state
-enum State curr_state;
+enum State curr_state = READY;
 // program next state
-enum State next_state;
+enum State next_state = READY;
 
 // duty for PWM Pulse
 volatile int duty = PERIOD - 1;
@@ -40,9 +40,18 @@ void lab5() {
 void MC_Init() {
   Timers_Init();
   PWM_Init();
+  LED_AllOff();
   Touch_Init();
   LCD_Init();
+  Screen_Init();
   UART_Init();
+  
+  // set all timers up from medArray
+  for (int i = 0; i < 3; i++) {
+    if (medArray[i].timeRem) {
+      Timer_Start(i, medArray[i].timeRem);
+    }
+  }
 }
 
 // handle I/O and get next state
