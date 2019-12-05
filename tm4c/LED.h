@@ -4,6 +4,8 @@
 #include "mcheader.h"
 #include <stdint.h>
 
+#define PERIOD 256
+
 void PWM_Init();
 
 void LED0_On(); void LED0_Off(); void LED0_Set(int);
@@ -18,6 +20,7 @@ void LED_AllOff();
 void PWM_Init() {
   RCGCPWM |= 0x2; // turn on PWM 1
   RCGCGPIO |= RCGCGPIO_F; // enable port F
+  int delay = 0; delay++; delay++; delay++;
   GPIOAFSEL_F |= 0xD; // enable pins 0, 2, 3
 
   // I don't know if the next four lines are necessary
@@ -28,7 +31,9 @@ void PWM_Init() {
 
   GPIOPCTL_F &= ~0xFF0F; // reset PF0, PF2, PF3
   GPIOPCTL_F |= 0x5505; // configure PF0, PF2, PF3 for PWM
-  RCC &= ~0x00100000; // don't divide PWM (USEPWMDIV)
+  // RCC &= ~0x00100000; // don't divide PWM (USEPWMDIV)
+  RCC |= 0x00100000; // divide PWM (USEPWMDIV)
+  RCC &= ~(7 << 17); // clear RCC PWMDIV (divide by 2)
 
   // configure PWM generators for countdown mode with immediate updates to the parameters
   PWM2CTL_1 = 0x00000000;
@@ -38,10 +43,10 @@ void PWM_Init() {
   PWM2GENB_1 = 0x0000080C; // turn on at load and off at B value
   PWM3GENB_1 = 0x0000080C; // turn on at load and off at B value
   
-  PWM2LOAD_1 = 127; // period of PWM clock /128
-  PWM3LOAD_1 = 127; // period of PWM clock /128
-  PWM2CMPA_1 = 127; // full-width pulse
-  PWM3CMPA_1 = 127; // full-width pulse
+  PWM2LOAD_1 = PERIOD - 1; // period of PWM clock / PERIOD
+  PWM3LOAD_1 = PERIOD - 1; // period of PWM clock / PERIOD
+  PWM2CMPA_1 = PERIOD - 1; // full-width pulse
+  PWM3CMPA_1 = PERIOD - 1; // full-width pulse
   PWM2CTL_1 |= 0x1; // start PWM timer
   PWM3CTL_1 |= 0x1; // start PWM timer
 }
@@ -72,18 +77,19 @@ void LED_Off(int i) {
   }
 }
 
-// set PWM level between 127 (on) and 0 (off)
-void LED0_Set(int level) { PWM2CMPA_1 = level; PWM3CMPA_1 = level; }
-void LED1_Set(int level) { PWM2CMPA_1 = level; PWM3CMPA_1 = level; }
-void LED2_Set(int level) { PWM2CMPA_1 = level; PWM3CMPA_1 = level; }
+// set PWM level between 511 (on) and 0 (off)
+void LED0_Set(int duty) { LED_Set(0, duty); }
+void LED1_Set(int duty) { LED_Set(1, duty); }
+void LED2_Set(int duty) { LED_Set(2, duty); }
 
-void LED_Set(int i, int level) {
-  switch (i)
-  {
-    case 0: LED0_Set(level); break;
-    case 1: LED1_Set(level); break;
-    case 2: LED2_Set(level); break;
-  }
+void LED_Set(int i, int duty) {
+  // same for all i
+  PWM2CTL_1 &= ~0x1; // stop PWM timer
+  PWM3CTL_1 &= ~0x1; // stop PWM timer
+  PWM2CMPA_1 = duty;
+  PWM3CMPA_1 = duty;
+  PWM2CTL_1 |= 0x1; // start PWM timer
+  PWM3CTL_1 |= 0x1; // start PWM timer
 }
 
 #endif

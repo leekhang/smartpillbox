@@ -2,6 +2,7 @@
 #include "mcheader.h"
 #include "main.h"
 #include "timers.h"
+#include "LED.h"
 
 void UART_Init(void);
 void lab5();
@@ -16,6 +17,11 @@ enum State curr_state;
 // program next state
 enum State next_state;
 
+// duty for PWM Pulse
+volatile int duty = PERIOD - 1;
+// direction of PWM pulse
+volatile int direction = 0;
+
 // one day in clock cycles at 16MHz
 #define TWENTY_FOUR_HOURS (unsigned long) 16000000 * 60 * 60 * 24
 
@@ -23,6 +29,7 @@ void lab5() {
   MC_Init();
 
   while (1) {
+    PWM_Pulse();
     FSM();
   }
 }
@@ -98,6 +105,22 @@ void Handle_TimeUpRepeat(int timer) {
   Timer_Restart(timer);
   Screen_Remind(timer);
   LED_On(timer);
+}
+
+// bounces duty cycle back and forth from 0 to max
+void PWM_Pulse() {
+  for (int i = 0; i < 30000; i++); // slight delay; adjust shorter as needed
+  if (direction == 0) {
+    if (duty == 4) {
+      direction = 1;
+    }
+    LED0_Set(duty--);
+  } else {
+    if (duty == PERIOD - 4) {
+      direction = 0;
+    }
+    LED0_Set(duty++);
+  }
 }
 
 // TODO
