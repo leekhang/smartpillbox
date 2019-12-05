@@ -19,16 +19,10 @@ struct Med medArray[3];
 
 // program state
 enum State {
-  READY, RECEIVE_DATA,
-  TIMEUP0, TIMEUP0_REPEAT,
-  TIMEUP1, TIMEUP1_REPEAT,
-  TIMEUP2, TIMEUP2_REPEAT,
-  DONE
+  READY,
+  TIMEUP,
+  RECEIVE_DATA,
 };
-
-// state helper array
-enum State TIMEUP[3] = {TIMEUP0, TIMEUP1, TIMEUP2};
-enum State TIMEUP_REPEAT[3] = {TIMEUP0_REPEAT, TIMEUP1_REPEAT, TIMEUP2_REPEAT};
 
 // function to delay 
 void delay() { for (int i = 0; i < 1000000; i++); }

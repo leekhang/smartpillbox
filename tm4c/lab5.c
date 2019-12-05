@@ -2,6 +2,7 @@
 #include "mcheader.h"
 #include "main.h"
 #include "timers.h"
+#include "LCD.h"
 #include "LED.h"
 
 void UART_Init(void);
@@ -10,6 +11,8 @@ void MC_Init();
 void FSM();
 void Handle_TimeUp(int);
 void Handle_TimeUpRepeat(int);
+void Handle_Done();
+void PWM_Pulse();
 int SerialHasInput(void);
 
 // program current state
@@ -29,7 +32,6 @@ void lab5() {
   MC_Init();
 
   while (1) {
-    PWM_Pulse();
     FSM();
   }
 }
@@ -49,26 +51,27 @@ void FSM() {
     case READY:
       // serial input handler
       // if (SerialHasInput()) next_state = RECEIVE_DATA;
+
       // timer handlers
       for (int i = 0; i < 3; i++) {
         if (Timer_IsDone(i)) {
-          next_state = (medArray[i].timeRem < TWENTY_FOUR_HOURS) ? TIMEUP[i] : TIMEUP_REPEAT[i];
+          next_state = TIMEUP;
+          if (medArray[i].timeRem < TWENTY_FOUR_HOURS) {
+            Handle_TimeUp(i);
+          } else {
+            Handle_TimeUpRepeat(i);
+          }
         }
       }
       break;
 
-    case TIMEUP0: if (Done_Pressed()) next_state = DONE; Handle_TimeUp(0); break;
-    case TIMEUP1: if (Done_Pressed()) next_state = DONE; Handle_TimeUp(1); break;
-    case TIMEUP2: if (Done_Pressed()) next_state = DONE; Handle_TimeUp(2); break;
-
-    case TIMEUP0_REPEAT: if (Done_Pressed()) next_state = DONE; Handle_TimeUpRepeat(0); break;
-    case TIMEUP1_REPEAT: if (Done_Pressed()) next_state = DONE; Handle_TimeUpRepeat(1); break;
-    case TIMEUP2_REPEAT: if (Done_Pressed()) next_state = DONE; Handle_TimeUpRepeat(2); break;
-
-    case DONE:
-      next_state = READY;
-      Screen_Init();
-      LED_AllOff();
+    case TIMEUP:
+      if (Done_Pressed()) {
+        next_state = READY;
+        Handle_Done();
+      } else {
+        PWM_Pulse();
+      }
       break;
 
     default:
@@ -78,6 +81,7 @@ void FSM() {
   curr_state = next_state;
 }
 
+// starts the time at 24 hours for the given timer, shows the reminder screen, and turns on the LED
 void Handle_TimeUp(int timer) {
   Timer_Start(timer, TWENTY_FOUR_HOURS);
   medArray[timer].timeRem = TWENTY_FOUR_HOURS;
@@ -85,13 +89,20 @@ void Handle_TimeUp(int timer) {
   LED_On(timer);
 }
 
+// restarts the given timer, shows the reminder screen, and turns on the LED
 void Handle_TimeUpRepeat(int timer) {
   Timer_Restart(timer);
   Screen_Remind(timer);
   LED_On(timer);
 }
 
-// bounces duty cycle back and forth from 0 to max
+// handles done pressed by returning to the home screen and turning off LEDs
+void Handle_Done() {
+  Screen_Init();
+  LED_AllOff();
+}
+
+// bounces duty cycle back and forth from 0 to max, creating a pulse
 void PWM_Pulse() {
   for (int i = 0; i < 30000; i++); // slight delay; adjust shorter as needed
   if (direction == 0) {
