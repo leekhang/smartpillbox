@@ -97,14 +97,14 @@ int Timer1_IsDone() { return (GPTMRIS_T1_3264 & 0x1); }
 int Timer2_IsDone() { return (GPTMRIS_T2_3264 & 0x1); }
 
 // This returns whether or not the timer is done (0 for not done, 1 for done)
-int Timer_IsDone(int timer)
-{
-  switch (timer)
-  {
-    case 0: return Timer0_IsDone();
-    case 1: return Timer1_IsDone();
-    case 2: return Timer2_IsDone();
+int Timer_IsDone(int timer) {
+  int out = 0;
+  switch (timer) {
+    case 0: out = Timer0_IsDone(); break;
+    case 1: out = Timer1_IsDone(); break;
+    case 2: out = Timer2_IsDone(); break;
   }
+  return out;
 }
 
 // This clears the timer complete indicator, which restarts the timer
@@ -117,13 +117,13 @@ void Timer1_Restart() { GPTMICR_T1_3264 |= 0x1; }
 void Timer2_Restart() { GPTMICR_T2_3264 |= 0x1; }
 
 // This clears the timer complete indicator, which restarts the timer
-void Timer_Restart(int timer)
-{
-  switch (timer)
-  {
+void Timer_Restart(int timer) {
+  
+  switch (timer) {
     case 0: Timer0_Restart(); break;
     case 1: Timer1_Restart(); break;
     case 2: Timer2_Restart(); break;
+  }
 }
 
 #endif

@@ -6,11 +6,13 @@
 #include "SSD2119.h"
 #include "main.h"
 
+void Screen_Init(void);
 int Med_Name_Length(int);
 void Screen_Print_Name(int);
 void Screen_Print_Time(int);
 void LCD_DrawFilledRoundedRect(unsigned short, unsigned short, short, short, unsigned short, unsigned short);
 void Screen_Remind(int);
+unsigned long Done_Pressed(void);
 
 // Function initializes the LCD screen
 void Screen_Init() {
@@ -24,9 +26,6 @@ void Screen_Init() {
     Screen_Print_Time(i);
   }
 
-  // Initialize the button pressing
-  // SS_NORMAL(); // draw start/stop button
-  // PED_NORMAL(); // draw pedestrian button
 }
 
 void LCD_DrawFilledRoundedRect(unsigned short x, unsigned short y, short w, short h, unsigned short rad, unsigned short color) {
@@ -81,38 +80,19 @@ void Screen_Remind(int i) {
   LCD_SetTextColor(0xFF, 0xFF, 0xFF); // white text
   LCD_SetCursor(135, 126);
   LCD_PrintString("Medicine");
+
+  LCD_DrawFilledRoundedRect((LCD_WIDTH/2-40), 160, 80, 40, 6, 0);
+  LCD_SetCursor((LCD_WIDTH/2-12), 176);
+  LCD_PrintString("DONE");
 }
 
-// Functions to turn on and off lights on screen
-void RED_ON() { LCD_DrawFilledCircle(55, 55,  30, Color4[12]); }
-void RED_OFF() { LCD_DrawFilledCircle(55, 55,  30, Color4[8]); }
-void YELLOW_ON() { LCD_DrawFilledCircle(55, 120, 30, Color4[14]); }
-void YELLOW_OFF() { LCD_DrawFilledCircle(55, 120, 30, Color4[8]); }
-void GREEN_ON() { LCD_DrawFilledCircle(55, 185, 30, Color4[10]); }
-void GREEN_OFF() { LCD_DrawFilledCircle(55, 185, 30, Color4[8]); }
-
-// Functions to turn on and off buttons on screen
-void SS_NORMAL() { LCD_DrawFilledRect(205, 10, 105, 105, 0); }
-void SS_TOUCH() { LCD_DrawFilledRect(205, 10, 105, 105, Color4[7]); }
-void PED_NORMAL() { LCD_DrawFilledRect(205, 125, 105, 105, 0); }
-void PED_TOUCH() { LCD_DrawFilledRect(205, 125, 105, 105, Color4[7]); }
-
-// Reads the pedestrian button touch input
-unsigned long PED_IN(void) {
+// function checks if the DONE button is tapped.
+unsigned long Done_Pressed(void) {
   Touch_ReadX(); Touch_ReadY(); // get values from touchscreen
   long coords = Touch_GetCoords(); // compute coordinates
   long xPos = coords >> 16; // extract x position of touch event
   long yPos = coords & 0xFFFF; // extract y posistion of touch event
-  return (xPos >= 50 && xPos <= 150 && yPos >= 120 && yPos <= 210); // check if in bounding box
-}
-
-// Reads the start/stop button touch input
-unsigned long SS_IN(void) {
-  Touch_ReadX(); Touch_ReadY(); // get values from touchscreen
-  long coords = Touch_GetCoords(); // compute coordinates
-  long xPos = coords >> 16; // extract x position of touch event
-  long yPos = coords & 0xFFFF; // extract y posistion of touch event
-  return (xPos >= 50 && xPos <= 150 && yPos >= 30 && yPos <= 120); // check if in bounding box
+  return (xPos >= 100 && xPos <= 175 && yPos >= 140 && yPos <= 210); // check if in bounding box
 }
 
 #endif
