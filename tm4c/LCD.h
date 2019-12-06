@@ -7,7 +7,6 @@
 #include "main.h"
 
 void Screen_Init(void);
-int Med_Name_Length(int);
 void Screen_Print_Name(int);
 void Screen_Print_Time(int);
 void LCD_DrawFilledRoundedRect(unsigned short, unsigned short, short, short, unsigned short, unsigned short);
@@ -83,9 +82,8 @@ void Screen_Remind(int i) {
   LCD_PrintString("Time To Take Your:");
 
   LCD_SetTextColor(0x00, 0xD9, 0xEA); // dark text
-  int count = Med_Name_Length(i);
-  LCD_DrawFilledRect(150-2*count-6, 104, count*7+4, 18, Color4[15]);
-  LCD_SetCursor(150-2*count, 108);
+  LCD_DrawFilledRect(150-16-6, 104, 60, 18, Color4[15]);
+  LCD_SetCursor(150-16, 108);
   LCD_PrintString(medArray[i].name);
 
   LCD_SetTextColor(0xFF, 0xFF, 0xFF); // white text

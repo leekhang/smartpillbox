@@ -3,12 +3,9 @@
 let serial; // variable to hold an instance of the serialport library.
 let portName = '/dev/tty.usbmodem0E2163341'; // rename to the name of your port.
 let portName1 = '/dev/tty.usbmodem0E22C91C1'; // rename to the name of your port.
-let options = { baudRate: 9600 , parity: "N", stopbits: 1};
 let str = "";
 
 function serialInit() {
-	// let serialserver = require('./js/p5.serialserver');
-	// serialserver.start(8081);
 	serial = new p5.SerialPort();       // make a new instance of the serialport library
 	console.log(serial.list());
 	serial.on('list', printList);       // set a callback function for the serialport list event
@@ -19,7 +16,7 @@ function serialInit() {
 	serial.on('close', portClose);      // callback for the port closing
 	
 	serial.list();                      // list the serial ports
-	serial.open(portName1);              // open a serial port
+	serial.open(portName);              // open a serial port
 }
 
 // Checks the serial for data from the TM4C.
@@ -31,20 +28,6 @@ function serialEvent() {
 			console.log(str);
 			str = "";
 		}
-
-		// if (value == 1 || value >= upper + 2) { // if the value is 1 or greater than the no. of todos in the webpage 
-		// 	serial.write(stringifyArray()); // write array to arduino
-		// } else if (value > 1) { // if value is greater than 1 (a todo item is completed)
-		// 	value -= 2; // change the value back to an index
-		// 	if (value < upper - 1) { // if index is not at the end of the array
-		// 		for (let i = value; i < upper; i++) { // shift each element to the left.
-		// 			medArr[i] = medArr[i+1]; 
-		// 		}
-		// 	}
-		// 	medArr.pop(); // pop out the last element (which is undefined).
-		// 	(upper > 0) ? upper-- : upper = 0; // decrement upper.
-		// 	displayToDos(); // display the new todos
-		// }
   }
 }
 

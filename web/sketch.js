@@ -26,14 +26,12 @@ function setup() {
 // Creates a new todo item based on the input field only if:
 // item is not an empty string and the maximum amount of todos hasn't been reached
 function createNewItem() {
-	let name = nameInput.value();
-	let time = timeInput.value();
+	let name = nameInput.value(); // get the name from the input field
+	let time = timeInput.value(); // get the time from the input field
   if ((name != "") && (name != " ") && (medArr.length <= ABS_MAX)) { 
-		let index = avail[0];
-		avail.shift();
+		let index = avail[0]; // get the first available index
+		avail.shift(); // remove the first available index by shifting leftwards.
 		medArr[index] = {name, time}; // append new item into array
-		// medArr.sort((a,b) => (a.time > b.time) ? 1 : -1);
-		// let index = medArr.findIndex((obj) => obj.name == name);
 		serial.write(stringifyMed(index)); // send the new array to TM4C
 		upper++; // increment the number of items.
 		displayToDos(); // display the new array of items.
@@ -46,10 +44,10 @@ function createNewItem() {
 function deleteItem() {
 	let index = parseInt(event.path[1].id.charAt(10)); // figure out which button is pressed
 	console.log("deleting item at index: " + index);
-	medArr[index] = undefined;
-	avail.push(index); avail.sort();
+	medArr[index] = undefined; // remove the item at the array
+	avail.push(index); avail.sort(); // add index as available an sort the availability array
 	(upper > 0) ? upper-- : upper = 0; // decrement upper.
-	serial.write("^" + index);
+	serial.write("^" + index); // tell the microcontroller to delete at index
 	console.log(medArr);
 	displayToDos(); // display the new todos
 }
@@ -76,7 +74,7 @@ function displayToDos() {
 
 // Sets Enter key as an input method.
 function keyPressed() {
-	if (keyCode == 13) createNewItem(); // 13 is the Enter key.
+if (keyCode == 13) createNewItem(); // 13 is the Enter key.
 }
 
 // Updates the char count above the text field and restrict the user from inputting more than 16 chars.
@@ -91,39 +89,28 @@ function keyReleased() {
 }
 
 // Creates a string of all of the medicine items from the array.
-function stringifyArray() {
-	let output = "@"; // create a string with a start byte "@"".
-	if (medArr.length > 0) { // if there's sth in the array
-		for (let i = 0; i < ABS_MAX; i++) stringifyMed(i);
-	}
-	return output + "@";
-}
-
-// Creates a string of all of the medicine items from the array.
 function stringifyMed(index) {
 	let output = "%" + index; // add start byte + index
 	output += medArr[index].name.padEnd(14, " "); // append name of medicine (always 14 bytes)
 	output += timeConvert(medArr[index].time); // add time input for medicines (always 8 bytes)
-	let temp = timeRemaining(medArr[index].time).padStart(13, "0"); // add counter for TM4C (always 13 bytes)
-	output += temp;
+	output += timeRemaining(medArr[index].time).padStart(13, "0"); // add counter for TM4C (always 13 bytes)
 	console.log(output);
 	return output; // return the string
 }
 
-// Function to convert 
+// Function to convert a given time to a "00:00 PM" format.
 function timeConvert(time) {
-	time = time.split(":");
-	let timeOut = parseInt(time[0]);
-	let pmFlag = timeOut >= 12;
-	if (pmFlag && timeOut != 12) timeOut -= 12;	
-	if (timeOut > 0 && timeOut < 10) {
-		timeOut = "0" + timeOut + ":" + time[1];
-	} else {
-		if (timeOut == 0) timeOut += 12;
-		timeOut += ":" + time[1];
+	time = time.split(":"); // split the hours and minutes
+	let timeOut = parseInt(time[0]);  // get the hours
+	let pmFlag = timeOut >= 12; // determine whether hr is am or pm
+	if (pmFlag && timeOut != 12) timeOut -= 12; // if during the PM and not 12, minus by 12
+	if (timeOut > 0 && timeOut < 10) { // if hr is between 0 and 10 (exclusive)
+		timeOut = "0" + timeOut + ":" + time[1]; // add a zero at the front
+	} else { // if in the am 
+		if (timeOut == 0) timeOut += 12; // if 00:00 change to 12:00am
+		timeOut += ":" + time[1]; // add colon and mins
 	}
-	timeOut += (pmFlag) ? " PM" : " AM";
-	// console.log("time: " + timeOut.length);
+	timeOut += (pmFlag) ? " PM" : " AM"; // add am or pm
 	return timeOut;
 }
 
@@ -131,12 +118,16 @@ function timeConvert(time) {
 // Max value: 1382400000000 (= 60 * 60 * 24 * 16,000,000)
 function timeRemaining(time) { 
 	let today = new Date(), hr = parseInt(time[0]), output;
+	console.log(today);
 	time = time.split(":"); // split between hours (index 0) and minutes (index 1)
 	hr = (today.getHours() > hr) ? today.getHours() - hr : 24 + (hr - today.getHours()); // calc no. of hrs remaining (in hr).
 	output = (60 - today.getSeconds()); // calculate no. of sec remaining.
-	output += 60 * (59 - parseInt(time[1])); // add no. of mins remaining (in sec).
+	console.log("sec remaining: " + output);
+	output += 60 * (60 - parseInt(time[1])); // add no. of mins remaining (in sec).
+	console.log("+ mins remaining: " + output);
 	output += hr * 60 * 60; // add the no. of hours remaining (in sec).
-	output += "";
-	console.log("T.Rem: " + output.length);
-	return output + "";
+	console.log("+ hrs remaining: " + output);
+	output *= 16000000; // change output to string
+	console.log("output: " + output);
+	return output + ""; 
 }

@@ -38,17 +38,9 @@ void lab5() {
 
 // set up everything
 void MC_Init() {
-  Timers_Init();
-  PWM_Init();
-  LED_AllOff();
-  Touch_Init();
-  LCD_Init();
-  Screen_Init();
-  UART_Init();
-  
   // set all timers up from medArray
   for (int i = 0; i < 3; i++) {
-    if (medArray[i].timeRem) {
+    if (medArray[i].index != -1 && medArray[i].timeRem) {
       Timer_Start(i, medArray[i].timeRem);
     }
   }
@@ -58,7 +50,6 @@ void MC_Init() {
 void FSM() {
   switch (curr_state) {
     case READY:
-      // serial input handler
       // if (SerialHasInput()) next_state = RECEIVE_DATA;
 
       // timer handlers
