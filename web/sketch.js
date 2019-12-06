@@ -115,19 +115,24 @@ function timeConvert(time) {
 }
 
 // Function determines how much longer the TM4C needs to count to before the user has to take a medicine.
+// takes in a 24-hour time in MM:SS form and returns a string of the number of clock cycles remaining
+// note: does not currently take into account things like Daylight Saving Time or leap days
 // Max value: 1382400000000 (= 60 * 60 * 24 * 16,000,000)
-function timeRemaining(time) { 
-	let today = new Date(), hr = parseInt(time[0]), output;
-	console.log(today);
-	time = time.split(":"); // split between hours (index 0) and minutes (index 1)
-	hr = (today.getHours() > hr) ? today.getHours() - hr : 24 + (hr - today.getHours()); // calc no. of hrs remaining (in hr).
-	output = (60 - today.getSeconds()); // calculate no. of sec remaining.
-	console.log("sec remaining: " + output);
-	output += 60 * (60 - parseInt(time[1])); // add no. of mins remaining (in sec).
-	console.log("+ mins remaining: " + output);
-	output += hr * 60 * 60; // add the no. of hours remaining (in sec).
-	console.log("+ hrs remaining: " + output);
-	output *= 16000000; // change output to string
+function timeRemaining(timeStr) { 
+	let now = new Date(), time = new Date(), output;
+	let timeArr = timeStr.split(":"); // split between hours (index 0) and minutes (index 1)
+	time.setHours(timeArr[0]);
+	time.setMinutes(timeArr[1]);
+	time.setSeconds(0);
+	time.setMilliseconds(0);
+
+	// if time has already passed today, increment day
+	if (now > time) {
+		time.setDate(time.getDate() + 1);
+	}
+	console.log("now:  " +  now + "\ntime: " + time);
+
+	output = (time - now) / 1000 * 16000000; // find difference, divide by milliseconds, multiply by clock speed
 	console.log("output: " + output);
-	return output + ""; 
+	return output + ""; // return output as string
 }
