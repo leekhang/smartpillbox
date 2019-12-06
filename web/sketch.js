@@ -19,11 +19,11 @@ function setup() {
 	// Create Button
 	button = createButton("+").id("addbutton").parent("form"); // create <button> HTML element
 	button.mousePressed(createNewItem); // set an event listener for the button
-	avail.push(0, 1, 2);
+	avail.push(0, 1, 2); // put all indices into the availability array
 	upper = 0; // set the initial number of todos to 0.
 }
 
-// Creates a new todo item based on the input field only if:
+// Creates a new item based on the input field only if:
 // item is not an empty string and the maximum amount of todos hasn't been reached
 function createNewItem() {
 	let name = nameInput.value(); // get the name from the input field

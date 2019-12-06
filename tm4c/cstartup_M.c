@@ -76,7 +76,7 @@ const intvec_elem __vector_table[] =
   0,                    //30
   0,                    //31
   0,                    //32
-  ADC0_Handler,         //33
+  0,                    //33
   0,                    //34
   0,                    //35
   0,                    //36

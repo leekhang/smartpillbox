@@ -19,7 +19,7 @@ function serialInit() {
 	serial.open(portName);              // open a serial port
 }
 
-// Checks the serial for data from the TM4C.
+// Checks the serial for data from the TM4C, use for debugging only.
 function serialEvent() {
 	if (serial.available()) { // if the info is being sent through the serial.
 		let value = parseInt(serial.read()); // retrieve data from seriald as an int.
