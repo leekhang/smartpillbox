@@ -1,3 +1,5 @@
+/* Helper Functions for LED control via PWM (Pulse-Width Modulation) drivers */
+
 #ifndef __LED_H__
 #define __LED_H__
 

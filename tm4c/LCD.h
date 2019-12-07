@@ -1,4 +1,4 @@
-/* Helper Functions for ADC, Timers, and LCD Touchscreen */
+/* Helper Functions for LCD Touchscreen */
 
 #ifndef __LCD_H__
 #define __LCD_H__

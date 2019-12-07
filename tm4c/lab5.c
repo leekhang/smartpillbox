@@ -46,12 +46,10 @@ void MC_Init() {
   }
 }
 
-// handle I/O and get next state
+// handle I/O and update state
 void FSM() {
   switch (curr_state) {
     case READY:
-      // if (SerialHasInput()) next_state = RECEIVE_DATA;
-
       // timer handlers
       for (int i = 0; i < 3; i++) {
         if (Timer_IsDone(i)) {
